@@ -10,7 +10,7 @@ addpath('./spharm');
 % ranomly choosen between [-1 1]
 
 % Parameters:
-K = 20;% the number of dirac
+K = 4;% the number of dirac
 N = 2*K; % the number of moments
 M = 2*K; % Number of samples
 check = 0; % Print some test?
@@ -90,10 +90,19 @@ for n = 0:N-1
 end
 
 % Compute on each spherical harmonics what is the coefficient:
-N_fact_real = real(fnn)./(real(z_true))
+N_fact_real = real(fnn)./(real(z_true));
 for n = 0:N-1
     % Normalizing factor of the Legendre polynomial N_n with repest to Rodriguez's fromula:
-    ( (-1)^n * (n + 0.5) / factorial(2*n) )
+    t = @(n) (-1)^n * factorial(2*n-2)/factorial(n-1)*(n - 0.5)/2^(n-2);
+
+    N_fact_real(n+1);
+    if n > 0
+        fprintf('%f = %f \n', t(n), N_fact_real(n+1) )
+    else
+        fprintf('%f = %f \n', 1.0, N_fact_real(n+1) )
+    end
+    
+    %( (-1)^n * (n + 0.5) / factorial(2*n) )
 
     % Normalizing factor in physical convention (c.f. wikipedia)
     %sqrt( (2.*n + 1 )/ (4*pi * factorial(2.*n)  )  )
