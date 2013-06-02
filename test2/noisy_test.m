@@ -21,13 +21,14 @@ fri.Weights = sort(rand(1, K) );
 abs_diff = zeros(10, 1);
 abs_diff_2 = zeros(10, 1);
 hold on;
+plotStyle = {'b','g','r', 'k'};
 for power = 7:10
 	for n = 1:10
 
 		UP = n*16;
 		phi 	= linspace(0, 2*pi - 2*pi/UP  , UP);  % Azi
-		theta  	= linspace(0,   pi - pi/UP + 0.001   , UP);
-		P = kernelP(N, phi, theta);
+		theta  	= linspace(0,   pi - randn(1) * pi/UP, UP);
+		P = kernelP(K, phi, theta);
 
 		% Compute the spherical harmonics:
 		[ftmp ftmpNeg] = coeffFromFRI(fri);
@@ -58,8 +59,10 @@ for power = 7:10
 
 	end
 
-	plot(1:10, abs_diff);
+	plot(1:10, log(abs_diff ./ abs_diff_s'), plotStyle{ power - 6} );
 	
 end
-% legend(sprintf('Noise poser 10^%d', 5), sprintf('Noise poser 10^%d', 5), sprintf('Noise poser 10^%d', 5), sprintf('Noise poser 10^%d', 5), sprintf('Noise poser 10^%d', 5));
+legend(sprintf('Noise power 10^{-%d}', 7), sprintf('Noise power 10^{-%d}', 8), sprintf('Noise power 10^{-%d}', 9), sprintf('Noise power 10^{-%d}', 10));
+xlabel('n times the min. nb of samples');
+ylabel('Ratio of the noise in log');
 hold off;

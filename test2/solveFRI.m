@@ -1,14 +1,10 @@
-function fri_est = solveFRI(samples, fri)
+function fri_est = solveFRI(samples, K, phi, theta)
 
-	check = 1;
-	if nargin < 2
-		% The number of sample we have/need:
-		check = 0;
-	end
+	
+	
 
 	nb_samples = length(samples);
 
-	K = (nb_samples + 1)/4;
 	N = 2*K;
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -18,19 +14,26 @@ function fri_est = solveFRI(samples, fri)
 	% Construct the matrix P
 	% Which consist of only the independant column of the 
 	% kernel of a low-pass filter:
-	P = kernelP(N);
+	
+
+	if nargin < 3
+		% The number of sample we have/need:
+	else
+		P = kernelP(K);
+	end
 
 	% The coefficient of same order and same degree
-	fnn = inv(P) * samples(1:N)';
-	fnn = fnn.';
-	% The coefficient of degree one minus the order
-	fn1n = inv(P(2:end, 2:end)) * samples(N+1:end)';
-	fn1n = fn1n.';
+	f_est = pinv(P) * samples;
+	% Put it back on my standart form:
+	[f fNeg] = vect2spharm(f_est);
+	% Catch only the diagonal:
+	fnn = diag(f).';
+	% Catch only the diagonal below
+	fn1n = diag(f, -1)';
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% FIND PHI:
-	%
-
+	
 	Nn = Normalizing(N);
 	% Construct z:
 	z = fnn ./ Nn;
@@ -48,11 +51,7 @@ function fri_est = solveFRI(samples, fri)
 
 	% Put the r_k vector in the right order:
 	r = r(IX);
-	% Check if we have the correct order:
-	if check
-		r_test(fri, (r));
-		print_check('Position check on phi: ',  phi_est, fri.Locations(:, 2));
-	end
+	
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% FIND THE AMPLITUDE:
@@ -64,9 +63,7 @@ function fri_est = solveFRI(samples, fri)
 	% Solve it:
 	a = sort( real(V \ z(1:K).'));
 
-	if check
-		print_check('Amplitude check: ',  a', fri.Weights);
-	end
+	
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% FIND THETA:
@@ -93,9 +90,7 @@ function fri_est = solveFRI(samples, fri)
 	% We can find theta:
 	theta_est   =  sort(mod( real(acos(c_est)), pi));
 
-	if check
-		print_check('Position check on theta: ', theta_est, fri.Locations(:, 1));
-	end
+	
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% CONSTRUCT THE ESTIMATED SIGNAL:

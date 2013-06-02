@@ -6,7 +6,7 @@ function v = spharm2vect(m, mneq)
 		throw( MException('spharm2vect:invalide', 'Impossible transformation'));
 	end
 	% Number of element of the lower triangle part of m and the lower triangle part minus the diagonal of mneq
-	nb = s*(s+1)/2 + s*(s-1)/2;
+	nb = s*(s+1)/2 + s*(s-1)/2; % = s*s; 
 	% output:
 	v = zeros(nb, 1);
 	% Stupid counter
