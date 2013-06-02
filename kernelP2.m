@@ -37,19 +37,16 @@ function [P Palt] = kernelP(L)
 
 		if l == 0
 			P(l+1, : ) =  P(l+1, : ) + NSpher(0, l) .* Lmn( 1, :);
-		end
-
-		% Compute the sum Eq. (8)
-		for i = -l:1:l
-			if i < 0
-				% Compute for the negative one, add the coeff:
-				P(l+1, : ) =  P(l+1, : ) + NSpher(i, l) * Neq(i, l) .* Lmn( abs(i)+1, :) .* exp(1i*i*THETA);
-			else
-				P(l+1, : ) =  P(l+1, : ) + NSpher(i, l) .* 			 Lmn(      i+1, :) .* exp(1i*i*THETA);
+		else 
+			% Compute the sum Eq. (8)
+			for i = -l:1:l
+				if i < 0
+					% Compute for the negative one, add the coeff:
+					P(l+1, : ) =  P(l+1, : ) + NSpher( abs(i) , l) * Neq( abs(i), l) .* Lmn( abs(i)+1, :) .* exp(1i*i*THETA);
+				else
+					P(l+1, : ) =  P(l+1, : ) + NSpher(i, l) .* 			 Lmn(      i+1, :) .* exp(1i*i*THETA);
+				end
 			end
-
-
-			
 		end
 
 

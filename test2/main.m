@@ -24,33 +24,33 @@ fri.Weights = sort(rand(1, K) );
 % Construct the matrix P
 % Which consist of only the independant column of the 
 % kernel of a low-pass filter:
-P = kernelP(N);
+UP = 40;
+phi 	= linspace(0, 2*pi - 2*pi/UP  , UP);  % Azi
+theta  	= linspace(0,   pi - pi/UP + 0.001   , UP);
+P = kernelP(N, phi, theta);
 
+size(P)
 
 % Compute the spherical harmonics:
-[ftmp fNeg] = coeffFromFRI(fri);
+[ftmp ftmpNeg] = coeffFromFRI(fri);
 % Pick up only the ones in the diagonal
-fnn_true = diag(ftmp);
-% and the one just below:
-fn1n_true = diag(ftmp, -1);
-
+f_true = spharm2vect(ftmp, ftmpNeg);
 
 
 % Compute the samples:
-snn = P * fnn_true;
-% The first line is f_0^0 so remove it:
-sn1n = P(2:end, 2:end) * fn1n_true;
+snn = P * f_true;
+
 
 % Test to be sure our matrix is not blowing up the system:
 ftest = pinv(P) * snn;
-if abs(ftest - fnn_true) > 0.00000001
+if abs(ftest - f_true) > 0.00000001
 	fprintf('Problem with the matrix inversion \n');
 end
 
 
-% Then solve it:
-fri_est = solveFRI([snn' sn1n'] );
+% % Then solve it:
+% fri_est = solveFRI([snn' sn1n'] );
 
-print_check('Position check on phi: ',  fri_est.Locations(:, 2), fri.Locations(:, 2));
-print_check('Position check on theta: ', fri_est.Locations(:, 1), fri.Locations(:, 1));
-print_check('Amplitude check: ',  fri_est.Weights, fri.Weights);
+% print_check('Position check on phi: ',  fri_est.Locations(:, 2), fri.Locations(:, 2));
+% print_check('Position check on theta: ', fri_est.Locations(:, 1), fri.Locations(:, 1));
+% print_check('Amplitude check: ',  fri_est.Weights, fri.Weights);
