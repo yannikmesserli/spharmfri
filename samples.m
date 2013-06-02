@@ -6,7 +6,7 @@ function s = samples(N, f, plot)
 
 
 	% Sampling grid:
-	grid = [500 500];
+	grid = [4 4];
 	% We need only one of the grid:
 	Theta = zeros(grid);
 	Phi = zeros(grid);
