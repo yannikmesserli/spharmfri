@@ -1,4 +1,4 @@
-function fri_est = solveFRI(samples, K, phi, theta)
+function fri_est = solveFRI(samples, K, phi, theta, h)
 
 	nb_samples = length(samples);
 
@@ -9,16 +9,8 @@ function fri_est = solveFRI(samples, K, phi, theta)
 	%
 
 	% Construct the matrix P
-	% Which consist of only the independant column of the 
-	% kernel of a low-pass filter:
+	P = kernelP(K, phi, theta, h);
 	
-
-	if nargin < 3
-		% The number of sample we have/need on a uniform sheme:
-		P = kernelP(K);
-	else
-		P = kernelP(K, phi, theta);
-	end
 
 	% The coefficient of same order and same degree
 	f_est = pinv(P) * samples;

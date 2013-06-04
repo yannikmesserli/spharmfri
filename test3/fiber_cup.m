@@ -20,10 +20,9 @@ directions = dlmread('../fiber_cup/diffusion_directions_corrected.txt');
 phi = phi_tot(2:65);
 theta = theta_tot(2:65);
 
-figure; plotonsphere2(phi, theta);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SAMPLES
+% TRAINING PART
 % Load the nii file
 nii = load_nii('../fiber_cup/dwi-b1500.nii');
 
@@ -43,10 +42,17 @@ sample_test = ones( size(index) ) ./ log(  double(nii.img(index)) - double(nii.i
 sample_test = (sample_test - min(sample_test));
 sample_test = sample_test ./ max(sample_test);
 
+% Construct the true diffusion direction:
+fri.Locations = [ 0 0 ];
+fri.Weights = [ 1 ];
+
 % Then solve it:
-fri_est = solveFRI(sample_test, 2, phi', theta');
+h = kernelTrain(sample_test, fri, phi', theta');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TEST PART:
+%
+
 t2 = repmat(voxel_pos{1}, 64, 1);
 t2 = [t2 (67:130)' ];
 base_i2 = sub2ind(size(nii.img), voxel_pos{1}(1), voxel_pos{1}(2), voxel_pos{1}(3), 66);
@@ -57,7 +63,7 @@ sample_test2 = (sample_test2 - min(sample_test2));
 sample_test2 = sample_test2 ./ max(sample_test2);
 
 % Then solve it:
-fri_est2 = solveFRI(sample_test2, 2, phi', theta');
+fri_est = solveFRI(sample_test2, 2, phi', theta', h);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

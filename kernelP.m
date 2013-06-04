@@ -2,19 +2,12 @@
 % - Our kernel must have a bandlimit L, that means that l < L
 % For now, it is also one everywhere in < L
 
-function [P Palt] = kernelP(L, M, h) 
+function P = kernelP(L, h) 
 	addpath('./spharm');
 	% later define h
 	% we could use h to search min...
 
-
-	if nargin < 2
-		% The number of sample we have/need:
-		M = 0;
-		for l = 0:L-1
-			M = M + 2*l + 1;
-		end
-	end
+	
 
 	% Define our matrix P of size MxM
 	P = zeros(M,M);
