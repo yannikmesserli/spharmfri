@@ -3,7 +3,7 @@ function [h err] = kernelTrain(sample, fri, theta, phi)
 % a sampling kernel h so that it minimize the error with fri
 
 	% Parameter:
-	K = length(fri.Weights);
+	K = numel(fri.Weights);
 	L = 2*K;
 	M = length(sample);
 	N = (2*K)^2;

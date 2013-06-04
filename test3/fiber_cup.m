@@ -63,7 +63,7 @@ sample_test2 = (sample_test2 - min(sample_test2));
 sample_test2 = sample_test2 ./ max(sample_test2);
 
 % Then solve it:
-fri_est = solveFRI(sample_test2, 2, phi', theta', h);
+fri_est = solveFRI(sample_test2, 1, phi', theta', h);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
