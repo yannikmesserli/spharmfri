@@ -31,15 +31,19 @@ rmse_l = zeros(2, length(db_axis));
 
 for j = 1:2
 	UP = 16*j;
-	counter = 0;
 
 	for i = 1:length(db_axis);
+
+		fprintf('%d / %d: ', i, length(db_axis) ) ;
+		counter = 0;
+
 		for n = 1:500
 		
 			db = db_axis(i);
 
-			
-
+			if mod(n, 50) == 0
+				fprintf('.');
+			end
 			
 			phi 	= linspace(0, 2*pi - 2*pi/UP  , UP); 
 			theta  	= linspace(0,   pi - randn(1) * pi/UP, UP);
@@ -81,9 +85,12 @@ for j = 1:2
 			rmse_a(j, i) = rmse_a(j, i) + RMSE(fri_est.Weights, fri.Weights);
 
 		end
+
 		rmse_f(j, i) = rmse_f(j, i) / counter;
 		rmse_a(j, i) = rmse_a(j, i) / counter;
 		rmse_l(j, i) = rmse_l(j, i) / counter;
+
+		fprintf('\n');
 	end
 	legends{j} = sprintf('%d x nb. min of samples', j);
 end

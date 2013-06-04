@@ -21,10 +21,10 @@ function fri_est = solveFRI(samples, fri)
 	P = kernelP(N);
 
 	% The coefficient of same order and same degree
-	fnn = inv(P) * samples(1:N)';
+	fnn = pinv(P) * samples(1:N)';
 	fnn = fnn.';
 	% The coefficient of degree one minus the order
-	fn1n = inv(P(2:end, 2:end)) * samples(N+1:end)';
+	fn1n = pinv(P(2:end, 2:end)) * samples(N+1:end)';
 	fn1n = fn1n.';
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
