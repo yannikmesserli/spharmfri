@@ -73,5 +73,5 @@ fri_est = solveFRI(sample_test2, 1, phi', theta', h);
 
 [x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights)
 % should find the same as:
-[x2 y2 z2] = sph2cart( fri_est2.Locations(:, 1)', fri_est2.Locations(:, 2)', fri_est2.Weights)
+[x2 y2 z2] = sph2cart( fri.Locations(:, 1)', fri.Locations(:, 2)', fri.Weights)
 % bouhhhhh

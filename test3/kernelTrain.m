@@ -14,7 +14,8 @@ function [h err] = kernelTrain(sample, fri, theta, phi)
 	% function to optimize w.r.t. h
 	objFct = @(h) ErrorFor(sample, K, theta, phi, h, fri);
 	% Search the min:
-	[h err] = fminsearch(objFct, h_start);
+	options = optimset('MaxFunEvals', 1e10);
+	[h err] = fminsearch(objFct, h_start, options);
 
 end
 
