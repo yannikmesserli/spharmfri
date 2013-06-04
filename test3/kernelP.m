@@ -21,7 +21,7 @@ function P = kernelP(nb_dirac, PHI, THETA, h)
 			Lmn 	= legendre(l, cos(THETA));
 			for i = -l:1:l
 				current = current +1;
-				P(current, :) = constructP(l, i, THETA, PHI, h, Lmn)
+				P(current, :) = constructP(l, i, THETA, PHI, h, Lmn, L);
 				% fprintf('constructiong l=%d i=%d, \tY = %g %gi,  \tL = %f, \tNeg = %f\n', l, i, P(current, 1),  P(current, 1),  Lmn( abs(i)+1, 1), NSpher( abs(i), l));
 			end
 		end
@@ -33,7 +33,8 @@ function P = kernelP(nb_dirac, PHI, THETA, h)
 end
 
 % Compute the value of \hat p_l^m from Eq. (8) of the paper:
-function P = constructP(l, m, THETA, PHI, h, Lmn)
+function P = constructP(l, m, THETA, PHI, h, Lmn, L)
+
 
 	% For negative polynomial, I'm using this relationship: 
 	% http://en.wikipedia.org/wiki/Associated_Legendre_polynomials#Negative_m_and.2For_negative_.E2.84.93
@@ -47,14 +48,16 @@ function P = constructP(l, m, THETA, PHI, h, Lmn)
 	P = 0;
 	% Compute sum:
 	for i = -l:1:l
+		% Refactor the indices so that they fit the matrix indices 0 => L^2+1, -L^2 => 1, L^2 => 2L^2+1
+		im = i*m + L^2 + 1;
 		if i < 0
 			P = P + ...
 				NSpher( abs(i), l) * Nneg( abs(i), l) .* Lmn( abs(i)+1, :) .* exp( 1i * i * PHI) ... % Spherical harmonic Y_l^m
-				.* h(i*m, l); % Sampling kernel coefficient
+				.* h(im, l+1); % Sampling kernel coefficient
 		elseif i >= 0
 			P = P + ...
 				NSpher( abs(i), l)					  .* Lmn( abs(i)+1, :) .* exp( 1i * i * PHI) ... % Spherical harmonic Y_l^m
-				.* h(i*m, l); % Sampling kernel coefficient
+				.* h(im, l+1); % Sampling kernel coefficient
 		end
 	end
 	

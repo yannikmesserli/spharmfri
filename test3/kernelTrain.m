@@ -4,12 +4,13 @@ function [h err] = kernelTrain(sample, fri, theta, phi)
 
 	% Parameter:
 	K = length(fri.Weights);
+	L = 2*K;
 	M = length(sample);
 	N = (2*K)^2;
 
 
 	% Starting value for h:
-	h_start = randn(L^2, L);
+	h_start = randn(2*(L^2)+1, L+1);
 	% function to optimize w.r.t. h
 	objFct = @(h) ErrorFor(sample, K, theta, phi, h, fri);
 	% Search the min:
