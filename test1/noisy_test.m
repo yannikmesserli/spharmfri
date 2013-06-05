@@ -28,7 +28,7 @@ db_axis = 10:0.2:80;
 rmse_f = zeros(length(db_axis), 1);
 rmse_angle = zeros(length(db_axis), 1);
 rmse_weight = zeros(length(db_axis), 1);
-rmse_all = zeros(2, length(db_axis));
+rmse_all = zeros(length(db_axis), 1);
 
 
 
@@ -93,9 +93,9 @@ for i = 1:length(db_axis);
 			% Save the mean square difference:
 			rmse_weight(i) = rmse_weight(i) + l;
 			rmse_angle(i) = rmse_angle(i) + a;
-			rmse_all(j, i) = rmse_all(j, i) + all;
+			rmse_all(i) = rmse_all(i) + all;
 			rmse_f(i) = rmse_f(i) + RMSE( [ fnn_noisy' fn1n_noisy'], [fnn_true' fn1n_true' ] );
-			
+
 
 		end
 
