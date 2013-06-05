@@ -119,6 +119,10 @@ end
 fprintf('\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CHECK TRUE POSITION: COMPARISON
+datetime=datestr(now);
+datetime=strrep(datetime,':','_');
+datetime=strrep(datetime,'-','_');
+datetime=strrep(datetime,' ','_');
 
-save('data/cart_position.mat', 'cart_cord1', 'cart_cord2');
+save( ['data/fiber_cup_all_' datetime], 'cart_cord1', 'cart_cord2');
 

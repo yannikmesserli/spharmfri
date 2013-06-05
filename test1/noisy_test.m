@@ -116,5 +116,5 @@ datetime=strrep(datetime,':','_');
 datetime=strrep(datetime,'-','_');
 datetime=strrep(datetime,' ','_');
 
-save( ['rmse_' datetime], 'rmse_angle', 'rmse_weight', 'rmse_f', 'legends', 'db_axis');
+save( ['data/rmse_' datetime], 'rmse_angle', 'rmse_weight', 'rmse_f', 'legends', 'db_axis');
 
