@@ -29,50 +29,50 @@ nii = load_nii('../fiber_cup/dwi-b1500.nii');
 % some voxel positions, see http://www.lnao.fr/spip.php?article109
 voxel_pos = {[51, 23, 1], [46, 21, 1], [51, 34, 1], [47, 32, 1], [41, 33, 1], [46, 38, 1], [44, 46, 1], [38, 48, 1], [31, 39, 1], [21, 48, 1], [17, 45, 1], [12, 40, 1], [11, 25, 1], [12, 17, 1], [24, 24, 1], [36, 9, 1]};
 
-% Get all the sample for the voxel 1
-t = repmat(voxel_pos{1}, 64, 1);
+% Get all the sample for the voxel j
+j = 3;
+t = repmat(voxel_pos{j}, 64, 1);
 t = [t (2:65)' ];
 % Get index of the ground:
-base_i = sub2ind(size(nii.img), voxel_pos{1}(1), voxel_pos{1}(2), voxel_pos{1}(3), 1);
+base_i = sub2ind(size(nii.img), voxel_pos{j}(1), voxel_pos{j}(2), voxel_pos{j}(3), 1);
 % Get index of all the different samples
 index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
 % Consctruct the sample:
-sample_test = ones( size(index) ) ./ log(  double(nii.img(index)) - double(nii.img(base_i)) );
-% normalize it:
-sample_test = (sample_test - min(sample_test));
-sample_test = sample_test ./ max(sample_test);
+s =  log( double(nii.img(base_i)) ) - log(  double(nii.img(index))  ) ;
 
 % Construct the true diffusion direction:
-fri.Locations = [ 0 0 ];
-fri.Weights = [ 1 ];
+load('../fiber_cup/tensor_feat.mat');
+x = tensor_direction(j, :);
+[p t w] = cart2sph(x(1), x(2), x(3));
+fri.Locations = [ p t ];
+fri.Weights = [ w ];
 
 % Then solve it:
 h = kernelTrain(sample_test, fri, phi', theta');
 
 % Save it in a mat file:
-cart_cord1 = zeros(numel(voxel_pos), 3);
-cart_cord1(1, : ) = sph2cart( fri.Locations(:, 1)', fri.Locations(:, 2)', fri.Weights);
+cart_cord1 = zeros(length(voxel_pos), 3);
+cart_cord1(j, : ) = x;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TEST PART:
 % same acquisition trials
 
-for i = 2:numel(voxel_pos)
-	fprintf('.');
-	t = repmat(voxel_pos{i}, 64, 1);
-	t = [t (2:65)' ];
+for i = 1:length(voxel_pos)
+	if i ~= j
+		fprintf('.');
+		t = repmat(voxel_pos{i}, 64, 1);
+		t = [t (2:65)' ];
 
-	index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
-	s = ones( size(index) ) ./ log(  double(nii.img(index)) - double(nii.img(base_i)) );
-	% normalize it:
-	s = (s - min(s));
-	s = s ./ max(s);
+		index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
+		s =  log( double(nii.img(base_i)) ) - log(  double(nii.img(index))  ) ;
 
-	% Then solve it:
-	fri_est = solveFRI(s, 1, phi', theta', h);
+		% Then solve it:
+		fri_est = solveFRI(s, 1, phi', theta', h);
 
-	[x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
-	cart_cord1(i, : ) = [x y z];
+		[x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+		cart_cord1(i, : ) = [x y z];
+	end
 
 end
 
@@ -81,39 +81,39 @@ end
 % SECOND SET:
 
 
-t2 = repmat(voxel_pos{1}, 64, 1);
+t2 = repmat(voxel_pos{j}, 64, 1);
 t2 = [t2 (67:130)' ];
-base_i2 = sub2ind(size(nii.img), voxel_pos{1}(1), voxel_pos{1}(2), voxel_pos{1}(3), 66);
+base_i2 = sub2ind(size(nii.img), voxel_pos{j}(1), voxel_pos{j}(2), voxel_pos{j}(3), 66);
 index2 = sub2ind(size(nii.img), t2(:,1), t2(:,2), t2(:,3), t2(:,4));
-sample_test2 = ones( size(index2) ) ./ log(  double(nii.img(index2)) - double(nii.img(base_i2)) );
-% normalize it:
-sample_test2 = (sample_test2 - min(sample_test2));
-sample_test2 = sample_test2 ./ max(sample_test2);
+s2 =  log( double(nii.img(base_i2)) ) - log(  double(nii.img(index2))  ) ;
 
 % Then solve it:
-h2 = kernelTrain(sample_test2, fri, phi', theta');
+h2 = kernelTrain(s2, fri, phi', theta');
 
 
 % Save it in a mat file:
-cart_cord2 = zeros(numel(voxel_pos), 3);
-cart_cord2(1, : ) = sph2cart( fri.Locations(:, 1)', fri.Locations(:, 2)', fri.Weights);
+cart_cord2 = zeros(length(voxel_pos), 3);
+cart_cord2(j, : ) = x;
+
 fprintf('\n');
-for i = 2:numel(voxel_pos)
-	fprintf('.');
-	t = repmat(voxel_pos{i}, 64, 1);
-	t = [t (2:65)' ];
+for i = 1:length(voxel_pos)
+	if i ~= j
+		fprintf('.');
+		t = repmat(voxel_pos{i}, 64, 1);
+		t = [t (2:65)' ];
 
-	index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
-	s = ones( size(index) ) ./ log(  double(nii.img(index)) - double(nii.img(base_i)) );
-	% normalize it:
-	s = (s - min(s));
-	s = s ./ max(s);
+		index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
+		s = ones( size(index) ) ./ log(  double(nii.img(index)) - double(nii.img(base_i)) );
+		% normalize it:
+		s = (s - min(s));
+		s = s ./ max(s);
 
-	% Then solve it:
-	fri_est = solveFRI(s, 1, phi', theta', h);
+		% Then solve it:
+		fri_est = solveFRI(s, 1, phi', theta', h);
 
-	[x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
-	cart_cord2(i, : ) = [x y z];
+		[x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+		cart_cord2(i, : ) = [x y z];
+	end
 
 end
 fprintf('\n');
