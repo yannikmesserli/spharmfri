@@ -82,5 +82,5 @@ datetime=strrep(datetime,':','_');
 datetime=strrep(datetime,'-','_');
 datetime=strrep(datetime,' ','_');
 
-save( ['fiber_cup_' datetime], 'rmse', 'est_direction', 'tensor_direction', 'fri_all');
+save( ['data/fiber_cup_' datetime], 'rmse', 'est_direction', 'tensor_direction', 'fri_all');
 
