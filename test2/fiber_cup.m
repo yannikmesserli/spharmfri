@@ -60,16 +60,17 @@ for i = 1:numel(voxel_pos)
 	% Get index of all the different samples
 	index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
 	% Consctruct the sample:
-	s =   log( double(nii.img(base_i)) ) - log(  double(nii.img(index))  ) ;
+	s =  log( double(nii.img(base_i)) ) - log(  double(nii.img(index))  ) ;
 
 	% Then solve it:
 	fri_est = solveFRI(s, 1, phi', theta');
 	% Save it
 	fri_all{i} = fri_est;
 	% Save the estimate position in cartesian coord:
-	est_direction(i, : ) = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+	[ x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+	est_direction(i, : ) = [ x y z];
 	% Save the estimate position with the tensor:
-	tensor_direction(i, : ) = nii_tensor.img(voxel_pos{i}(1), voxel_pos{i}(2), voxel_pos{i}(3), 1, :);
+	tensor_direction(i, : ) = nii_tensor.img(voxel_pos{i}(1), voxel_pos{i}(2), voxel_pos{i}(3), :);
 	% Compute the error:
 	rmse(i) = RMSE( est_direction(i, : ), tensor_direction(i, : ) );
 end

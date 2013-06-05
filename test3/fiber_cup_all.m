@@ -71,7 +71,8 @@ for i = 2:numel(voxel_pos)
 	% Then solve it:
 	fri_est = solveFRI(s, 1, phi', theta', h);
 
-	cart_cord1(i, : ) = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+	[x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+	cart_cord1(i, : ) = [x y z];
 
 end
 
@@ -111,7 +112,8 @@ for i = 2:numel(voxel_pos)
 	% Then solve it:
 	fri_est = solveFRI(s, 1, phi', theta', h);
 
-	cart_cord2(i, : ) = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+	[x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+	cart_cord2(i, : ) = [x y z];
 
 end
 
