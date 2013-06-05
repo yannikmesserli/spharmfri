@@ -64,6 +64,8 @@ for j = 1:2
 			s = P * f_true;
 			% Add noise
 			s_noisy = addNoise(s, db);
+			% Compute the sphericla back:
+			f_noisy = pinv(P) * s_noisy;
 			% Solve it
 			fri_est = solveFRI(s_noisy, K, phi, theta);
 			
