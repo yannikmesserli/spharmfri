@@ -51,7 +51,7 @@ fri_all = {};
 % same acquisition trials
 
 for i = 1:numel(voxel_pos)
-	frprintf('.');
+	fprintf('.');
 	% Get all the sample for the voxel 1
 	t = repmat(voxel_pos{i}, 64, 1);
 	t = [t (2:65)' ];
@@ -73,7 +73,7 @@ for i = 1:numel(voxel_pos)
 	% Compute the error:
 	rmse(i) = RMSE( est_direction(i, : ), tensor_direction(i, : ) );
 end
-frprintf('\n');
+fprintf('\n');
 
 %Build a name for the matfile
 datetime=datestr(now);
