@@ -11,7 +11,7 @@ function print_rmse(name_file)
 
 	for i = 1:nb_tick
 		% plot(db_axis, rmse_l(i, :), plotStyle{i} );
-		% plot(db_axis, rmse_a(i, :), plotStyle{i} );
+		plot(db_axis, rmse_a(i, :), plotStyle{i} );
 		% plot(db_axis, rmse_f(i, :), plotStyle{i} );
 	end
 

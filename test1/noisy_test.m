@@ -28,7 +28,7 @@ db_axis = 10:0.2:80;
 rmse_f = zeros(length(db_axis), 1);
 rmse_angle = zeros(length(db_axis), 1);
 rmse_weight = zeros(length(db_axis), 1);
-
+rmse_all = zeros(2, length(db_axis));
 
 
 
@@ -83,20 +83,19 @@ for i = 1:length(db_axis);
 			% Get back the coeff.
 			fnn_noisy =  pinv(P) * snn_noisy;
 			fn1n_noisy =  pinv(P(2:end, 2:end)) * sn1n_noisy;
-
-			rmse_f(i) = rmse_f(i) + RMSE( [ fnn_noisy' fn1n_noisy'], [fnn_true' fn1n_true' ] );
-
-			% Compute the error done:
+			
 
 			% Then solve it:
 			fri_est = solveFRI( [snn_noisy' sn1n_noisy'] );
 			
 			% comparte the two siganls:
-			[a l] = RMSE_FRI(fri_est, fri);
+			[a l all] = RMSE_FRI(fri_est, fri);
 			% Save the mean square difference:
 			rmse_weight(i) = rmse_weight(i) + l;
 			rmse_angle(i) = rmse_angle(i) + a;
-
+			rmse_all(j, i) = rmse_all(j, i) + all;
+			rmse_f(i) = rmse_f(i) + RMSE( [ fnn_noisy' fn1n_noisy'], [fnn_true' fn1n_true' ] );
+			
 
 		end
 

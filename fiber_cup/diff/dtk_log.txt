@@ -1,0 +1,75 @@
+
+
+
+************ 6/5/13 11:08 AM ************ 
+
+Steps to do:
+
+1. dti_recon "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/nii_transformed_for_diff" "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti" -gm "/var/folders/6b/gd4f57rs18l5dc04gr2ghk0h0000gn/T/dtk_tmp/matrices/gradient.txt" -b 1500 -b0 2 -iop 1 0 0 0 1 0 -p 3 -sn 1 -ot nii 
+
+2. dti_tracker "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti" "/var/folders/6b/gd4f57rs18l5dc04gr2ghk0h0000gn/T/dtk_tmp/track_tmp.trk" -at 35 -m "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti_fa.nii" 0.2 2 -it nii
+
+3. spline_filter "/var/folders/6b/gd4f57rs18l5dc04gr2ghk0h0000gn/T/dtk_tmp/track_tmp.trk" 1 "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti.trk"
+
+4. trackvis "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti.trk"
+
+--------- Launching dti_recon -----------------
+
+** ERROR: nifti_convert_nhdr2nim: bad dim[0]
+** ERROR (nifti_image_read): cannot create nifti image from header '/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/nii_transformed_for_diff.nii'
+
+Can not load image data from /Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/nii_transformed_for_diff.nii
+
+
+
+
+Process aborted due to error.
+
+
+
+
+************ 6/5/13 11:37 AM ************ 
+
+Steps to do:
+
+1. dti_recon "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/4D_final.nii" "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti" -gm "/var/folders/6b/gd4f57rs18l5dc04gr2ghk0h0000gn/T/dtk_tmp/matrices/gradient.txt" -b 1500 -b0 2 -p 3 -sn 1 -ot nii 
+
+2. dti_tracker "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti" "/var/folders/6b/gd4f57rs18l5dc04gr2ghk0h0000gn/T/dtk_tmp/track_tmp.trk" -at 35 -m "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti_fa.nii" 0.2 2 -it nii
+
+3. spline_filter "/var/folders/6b/gd4f57rs18l5dc04gr2ghk0h0000gn/T/dtk_tmp/track_tmp.trk" 1 "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti.trk"
+
+4. trackvis "/Users/yannik/Documents/MATLAB/FRI/spherical_test/test2/diff/dti.trk"
+
+--------- Launching dti_recon -----------------
+Volume dimension: 64 64 3
+Voxel size: 3.000 3.000 3.000
+Number of b0's: 2
+Number of gradient directions: 128
+
+Reading raw data... 100%
+Reconstructing... 0.0%
+b0 threshold used to mask background: 147.547 1435
+
+Writing output...
+Done.
+Reconstruction completed successfully.
+Time taken: 00:00:00
+
+--------- Launching dti_tracker -----------------
+Volume dimension: 64 64 3
+Voxel size: 3.000 3.000 3.000
+
+Threshold for mask one: 0.2 2
+
+Reading tensor data...done.
+Tracking... 4.7%
+--------- Launching spline_filter -----------------
+Volume dimension: 64 64 3
+Voxel size: 3.00 3.00 3.00
+
+Spline filtering track data... 
+--------- Launching trackvis -----------------
+TrackVis successfully launched.
+
+
+Total time taken: 00:00:00

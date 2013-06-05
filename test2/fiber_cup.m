@@ -27,45 +27,58 @@ figure; plotonsphere2(phi, theta);
 % Load the nii file
 nii = load_nii('../fiber_cup/dwi-b1500.nii');
 
-% some voxel positions, see http://www.lnao.fr/spip.php?article109
-voxel_pos = {[51, 23, 1], [46, 21, 1], [51, 34, 1], [47, 32, 1], [41, 33, 1], [46, 38, 1], [44, 46, 1], [38, 48, 1], [31, 39, 1], [21, 48, 1], [17, 45, 1], [12, 40, 1], [11, 25, 1], [12, 17, 1], [24, 24, 1], [36, 9, 1]};
-
-% Get all the sample for the voxel 1
-t = repmat(voxel_pos{1}, 64, 1);
-t = [t (2:65)' ];
-% Get index of the ground:
-base_i = sub2ind(size(nii.img), voxel_pos{1}(1), voxel_pos{1}(2), voxel_pos{1}(3), 1);
-% Get index of all the different samples
-index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
-% Consctruct the sample:
-sample_test = ones( size(index) ) ./ log(  double(nii.img(index)) - double(nii.img(base_i)) );
-% normalize it:
-sample_test = (sample_test - min(sample_test));
-sample_test = sample_test ./ max(sample_test);
-
-% Then solve it:
-fri_est = solveFRI(sample_test, 2, phi', theta');
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-t2 = repmat(voxel_pos{1}, 64, 1);
-t2 = [t2 (67:130)' ];
-base_i2 = sub2ind(size(nii.img), voxel_pos{1}(1), voxel_pos{1}(2), voxel_pos{1}(3), 66);
-index2 = sub2ind(size(nii.img), t2(:,1), t2(:,2), t2(:,3), t2(:,4));
-sample_test2 = ones( size(index2) ) ./ log(  double(nii.img(index2)) - double(nii.img(base_i2)) );
-% normalize it:
-sample_test2 = (sample_test2 - min(sample_test2));
-sample_test2 = sample_test2 ./ max(sample_test2);
-
-% Then solve it:
-fri_est2 = solveFRI(sample_test2, 2, phi', theta');
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CHECK TRUE POSITION
 % Load the nii file
-% nii_true = load_nii('../fiber_cup/spatial_positions.nii');
+nii_tensor = load_nii('../fiber_cup/diff/dti_v1.nii');
 
-[x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights)
-% should find the same as:
-[x2 y2 z2] = sph2cart( fri_est2.Locations(:, 1)', fri_est2.Locations(:, 2)', fri_est2.Weights)
-% bouhhhhh
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% some voxel positions, see http://www.lnao.fr/spip.php?article109
+voxel_pos = {[51, 23, 1], [46, 21, 1], [51, 34, 1], [47, 32, 1], [41, 33, 1], [46, 38, 1], [44, 46, 1], [38, 48, 1], [31, 39, 1], [21, 48, 1], [17, 45, 1], [12, 40, 1], [11, 25, 1], [12, 17, 1], [24, 24, 1], [36, 9, 1]};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+est_direction = zeros(length(voxel_pos), 3);
+tensor_direction = zeros(length(voxel_pos), 3);
+rmse = zeros(length(voxel_pos), 1);
+fri_all = {};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TEST PART:
+% same acquisition trials
+
+for i = 1:numel(voxel_pos)
+
+	% Get all the sample for the voxel 1
+	t = repmat(voxel_pos{i}, 64, 1);
+	t = [t (2:65)' ];
+	% Get index of the ground:
+	base_i = sub2ind(size(nii.img), voxel_pos{i}(1), voxel_pos{i}(2), voxel_pos{i}(3), 1);
+	% Get index of all the different samples
+	index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
+	% Consctruct the sample:
+	s =   log( double(nii.img(base_i)) ) - log(  double(nii.img(index))  ) ;
+
+	% Then solve it:
+	fri_est = solveFRI(s, 1, phi', theta', h);
+	% Save it
+	fri_all{i} = fri_est;
+	% Save the estimate position in cartesian coord:
+	est_direction(i, : ) = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
+	% Save the estimate position with the tensor:
+	tensor_direction(i, : ) = nii_tensor.img(voxel_pos{i}(1), voxel_pos{i}(2), voxel_pos{i}(3), 1);
+	% Compute the error:
+	rmse(i) = RMSE( est_direction(i, : ), tensor_direction(i, : ) );
+end
+
+%Build a name for the matfile
+datetime=datestr(now);
+datetime=strrep(datetime,':','_');
+datetime=strrep(datetime,'-','_');
+datetime=strrep(datetime,' ','_');
+
+save( ['fiber_cup_' datetime], 'rmse', 'est_direction', 'tensor_direction');
+
