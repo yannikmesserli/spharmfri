@@ -26,8 +26,8 @@ legends = {};
 db_axis = 10:0.2:80;
 
 rmse_f = zeros(length(db_axis), 1);
-rmse_a = zeros(length(db_axis), 1);
-rmse_l = zeros(length(db_axis), 1);
+rmse_angle = zeros(length(db_axis), 1);
+rmse_weight = zeros(length(db_axis), 1);
 
 
 
@@ -102,8 +102,8 @@ for i = 1:length(db_axis);
 
 	end
 	rmse_f(i) = rmse_f(i) / counter;
-	rmse_a(i) = rmse_a(i) / counter;
-	rmse_l(i) = rmse_l(i) / counter;
+	rmse_angle(i) = rmse_angle(i) / counter;
+	rmse_weight(i) = rmse_weight(i) / counter;
 
 	fprintf('\n');
 end
@@ -117,5 +117,5 @@ datetime=strrep(datetime,':','_');
 datetime=strrep(datetime,'-','_');
 datetime=strrep(datetime,' ','_');
 
-save( ['rmse_' datetime], 'rmse_a', 'rmse_l', 'rmse_f', 'legends', 'db_axis');
+save( ['rmse_' datetime], 'rmse_angle', 'rmse_weight', 'rmse_f', 'legends', 'db_axis');
 
