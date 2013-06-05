@@ -63,7 +63,7 @@ for i = 1:numel(voxel_pos)
 	s =   log( double(nii.img(base_i)) ) - log(  double(nii.img(index))  ) ;
 
 	% Then solve it:
-	fri_est = solveFRI(s, 1, phi', theta', h);
+	fri_est = solveFRI(s, 1, phi', theta');
 	% Save it
 	fri_all{i} = fri_est;
 	% Save the estimate position in cartesian coord:
@@ -81,5 +81,5 @@ datetime=strrep(datetime,':','_');
 datetime=strrep(datetime,'-','_');
 datetime=strrep(datetime,' ','_');
 
-save( ['fiber_cup_' datetime], 'rmse', 'est_direction', 'tensor_direction');
+save( ['fiber_cup_' datetime], 'rmse', 'est_direction', 'tensor_direction', 'fri_all');
 
