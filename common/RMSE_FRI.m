@@ -11,7 +11,7 @@ function [rmse_a rmse_l rmse_all] = RMSE_FRI(fri1, fri2)
 
 
 	% Transform to cartesian value with length 1.0 to compare everything:
-	[x y z] = sph2cart( fri1.Locations(:, 1)', fri1.Locations(:, 2)',  fri1.Weights');
+	[x y z] = sph2cart( fri1.Locations(:, 1)', fri1.Locations(:, 2)',  fri1.Weights);
 	[x2 y2 z2] = sph2cart( fri2.Locations(:, 1)', fri2.Locations(:, 2)', fri2.Weights );
 	% Concatenate everything in a big vector:
 	vect1 = [x y z];
