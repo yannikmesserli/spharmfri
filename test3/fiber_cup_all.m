@@ -48,7 +48,7 @@ fri.Locations = [ p t ];
 fri.Weights = [ w ];
 
 % Then solve it:
-h = kernelTrain(sample_test, fri, phi', theta');
+h = kernelTrain(s, fri, phi', theta');
 
 % Save it in a mat file:
 cart_cord1 = zeros(length(voxel_pos), 3);
