@@ -69,7 +69,7 @@ for i = 1:numel(voxel_pos)
 	% Save the estimate position in cartesian coord:
 	est_direction(i, : ) = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
 	% Save the estimate position with the tensor:
-	tensor_direction(i, : ) = nii_tensor.img(voxel_pos{i}(1), voxel_pos{i}(2), voxel_pos{i}(3), 1);
+	tensor_direction(i, : ) = nii_tensor.img(voxel_pos{i}(1), voxel_pos{i}(2), voxel_pos{i}(3), 1, :);
 	% Compute the error:
 	rmse(i) = RMSE( est_direction(i, : ), tensor_direction(i, : ) );
 end
