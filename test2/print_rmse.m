@@ -10,9 +10,9 @@ function print_rmse(name_file)
 	[nb_tick blop] = size(rmse_f);
 
 	for i = 1:nb_tick
-		plot(db_axis, rmse_l(i, :), plotStyle{i} );
-		plot(db_axis, rmse_a(i, :), plotStyle{i} );
-		plot(db_axis, rmse_f(i, :), plotStyle{i} );
+		% plot(db_axis, rmse_l(i, :), plotStyle{i} );
+		% plot(db_axis, rmse_a(i, :), plotStyle{i} );
+		% plot(db_axis, rmse_f(i, :), plotStyle{i} );
 	end
 
 	legend(legends);

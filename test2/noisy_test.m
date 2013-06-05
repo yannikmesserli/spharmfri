@@ -26,8 +26,9 @@ legends = {};
 db_axis = 10:0.2:80;
 
 rmse_f = zeros(2, length(db_axis));
-rmse_a = zeros(2, length(db_axis));
-rmse_l = zeros(2, length(db_axis));
+rmse_angle = zeros(2, length(db_axis));
+rmse_weight = zeros(2, length(db_axis));
+fri_all = zeros(2, length(db_axis), 500, 3);
 
 for j = 1:2
 	UP = 16*j;
@@ -76,19 +77,17 @@ for j = 1:2
 
 			fri_est = solveFRI(s_noisy, K, phi, theta);
 			
-			% Reshape as a unique vector:
-			t1 = reshape(fri_est.Locations, 1, numel(fri_est.Locations));
-			t2 = reshape(fri.Locations, 1, numel(fri.Locations));
-
+			% comparte the two siganls:
+			[a l] = RMSE_FRI(fri_est, fri);
 			% Save the mean square difference:
-			rmse_l(j, i) = rmse_l(j, i) + RMSE( t1, t2);
-			rmse_a(j, i) = rmse_a(j, i) + RMSE(fri_est.Weights, fri.Weights);
+			rmse_weight(j, i) = rmse_weight(j, i) + l;
+			rmse_angle(j, i) = rmse_angle(j, i) + a;
 
 		end
 
 		rmse_f(j, i) = rmse_f(j, i) / counter;
-		rmse_a(j, i) = rmse_a(j, i) / counter;
-		rmse_l(j, i) = rmse_l(j, i) / counter;
+		rmse_angle(j, i) = rmse_angle(j, i) / counter;
+		rmse_weight(j, i) = rmse_weight(j, i) / counter;
 
 		fprintf('\n');
 	end
@@ -103,5 +102,5 @@ datetime=strrep(datetime,':','_');
 datetime=strrep(datetime,'-','_');
 datetime=strrep(datetime,' ','_');
 
-save( ['rmse_' datetime], 'rmse_a', 'rmse_l', 'rmse_f', 'legends', 'db_axis');
+save( ['rmse_' datetime], 'rmse_angle', 'rmse_weight', 'rmse_f', 'legends', 'db_axis', 'fri_all');
 

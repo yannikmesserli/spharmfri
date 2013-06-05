@@ -25,9 +25,9 @@ abs_diff_2 = zeros(10, 1);
 legends = {};
 db_axis = 10:0.2:80;
 
-rmse_f = zeros(2, length(db_axis));
-rmse_a = zeros(2, length(db_axis));
-rmse_l = zeros(2, length(db_axis));
+rmse_f = zeros(length(db_axis), 1);
+rmse_a = zeros(length(db_axis), 1);
+rmse_l = zeros(length(db_axis), 1);
 
 
 
@@ -35,6 +35,7 @@ rmse_l = zeros(2, length(db_axis));
 
 for i = 1:length(db_axis);
 
+	db = db_axis(i);
 	counter = 0;
 	fprintf('%d / %d: ', i, length(db_axis) ) ;
 
@@ -44,7 +45,7 @@ for i = 1:length(db_axis);
 			fprintf('.');
 		end
 
-		db = db_axis(i);
+		
 
 		% Construct the matrix P
 		% Which consist of only the independant column of the 
@@ -90,13 +91,12 @@ for i = 1:length(db_axis);
 			% Then solve it:
 			fri_est = solveFRI( [snn_noisy' sn1n_noisy'] );
 			
-			% Reshape as a unique vector:
-			t1 = reshape(fri_est.Locations, 1, numel(fri_est.Locations));
-			t2 = reshape(fri.Locations, 1, numel(fri.Locations));
-
+			% comparte the two siganls:
+			[a l] = RMSE_FRI(fri_est, fri);
 			% Save the mean square difference:
-			rmse_l(i) = rmse_l(i) + RMSE( t1, t2);
-			rmse_a(i) = rmse_a(i) + RMSE(fri_est.Weights, fri.Weights);
+			rmse_weight(i) = rmse_weight(i) + l;
+			rmse_angle(i) = rmse_angle(i) + a;
+
 
 		end
 
