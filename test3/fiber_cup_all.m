@@ -58,7 +58,7 @@ cart_cord1(1, : ) = sph2cart( fri.Locations(:, 1)', fri.Locations(:, 2)', fri.We
 % same acquisition trials
 
 for i = 2:numel(voxel_pos)
-
+	fprintf('.');
 	t = repmat(voxel_pos{i}, 64, 1);
 	t = [t (2:65)' ];
 
@@ -97,9 +97,9 @@ h2 = kernelTrain(sample_test2, fri, phi', theta');
 % Save it in a mat file:
 cart_cord2 = zeros(numel(voxel_pos), 3);
 cart_cord2(1, : ) = sph2cart( fri.Locations(:, 1)', fri.Locations(:, 2)', fri.Weights);
-
+fprintf('\n');
 for i = 2:numel(voxel_pos)
-
+	fprintf('.');
 	t = repmat(voxel_pos{i}, 64, 1);
 	t = [t (2:65)' ];
 
@@ -116,9 +116,9 @@ for i = 2:numel(voxel_pos)
 	cart_cord2(i, : ) = [x y z];
 
 end
-
+fprintf('\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CHECK TRUE POSITION: COMPARISON
 
-save('cart_position.mat', 'cart_cord1', 'cart_cord2');
+save('data/cart_position.mat', 'cart_cord1', 'cart_cord2');
 
