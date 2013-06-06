@@ -42,24 +42,27 @@ s =  log( double(nii.img(base_i)) ) - log(  double(nii.img(index))  ) ;
 
 % Construct the true diffusion direction:
 load('../fiber_cup/tensor_feat.mat');
-x = tensor_direction(j, :);
-[p t w] = cart2sph(x(1), x(2), x(3));
+vect = tensor_direction(j, :);
+[p t w] = cart2sph(vect(1), vect(2), vect(3));
 fri.Locations = [ p t ];
 fri.Weights = [ w ];
 
 % Then solve it:
-h = kernelTrain(s, fri, phi', theta');
+tStart = tic;
+[ h err] = kernelTrain(s, fri, phi', theta');
+tEnd = toc(tStart);
+fprintf('%d minutes and %f seconds to estimate h with %f  error \n', floor(tEnd/60),rem(tEnd,60), err );
 
 % Save it in a mat file:
 cart_cord1 = zeros(length(voxel_pos), 3);
-cart_cord1(j, : ) = x;
+cart_cord1(j, : ) = vect;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TEST PART:
 % same acquisition trials
 
 for i = 1:length(voxel_pos)
-	if i ~= j
+	% if i ~= j
 		fprintf('.');
 		t = repmat(voxel_pos{i}, 64, 1);
 		t = [t (2:65)' ];
@@ -72,7 +75,7 @@ for i = 1:length(voxel_pos)
 
 		[x y z] = sph2cart( fri_est.Locations(:, 1)', fri_est.Locations(:, 2)', fri_est.Weights);
 		cart_cord1(i, : ) = [x y z];
-	end
+	% end
 
 end
 
@@ -88,12 +91,16 @@ index2 = sub2ind(size(nii.img), t2(:,1), t2(:,2), t2(:,3), t2(:,4));
 s2 =  log( double(nii.img(base_i2)) ) - log(  double(nii.img(index2))  ) ;
 
 % Then solve it:
-h2 = kernelTrain(s2, fri, phi', theta');
+tStart = tic;
+[ h2 err] = kernelTrain(s2, fri, phi', theta');
+tEnd = toc(tStart);
+fprintf('%d minutes and %f seconds to estimate h with %f  error \n', floor(tEnd/60),rem(tEnd,60), err );
+
 
 
 % Save it in a mat file:
 cart_cord2 = zeros(length(voxel_pos), 3);
-cart_cord2(j, : ) = x;
+cart_cord2(j, : ) = vect;
 
 fprintf('\n');
 for i = 1:length(voxel_pos)
@@ -103,10 +110,8 @@ for i = 1:length(voxel_pos)
 		t = [t (2:65)' ];
 
 		index = sub2ind(size(nii.img), t(:,1), t(:,2), t(:,3), t(:,4));
-		s = ones( size(index) ) ./ log(  double(nii.img(index)) - double(nii.img(base_i)) );
-		% normalize it:
-		s = (s - min(s));
-		s = s ./ max(s);
+		s =  log( double(nii.img(base_i)) ) - log(  double(nii.img(index))  ) ;
+
 
 		% Then solve it:
 		fri_est = solveFRI(s, 1, phi', theta', h);
